@@ -19,5 +19,4 @@ def main():
     print("invers of b: {}".format(b.inverse()))
 
 if __name__ == '__main__':
-
     main()
