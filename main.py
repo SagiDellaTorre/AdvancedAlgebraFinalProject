@@ -40,6 +40,10 @@ def main():
     # section (4) - matrix representation
     #########################################
 
+    l = FiniteField(47,[42,3,0,1])
+    a = FiniteFieldElement(l, [1, 2, 3])
+
+    print("polynomial a in matrix representation: {}".format(a.a_mat)) # [[1,  2,  3], [15, 39,  2], [10,  9, 39]]
 
 if __name__ == '__main__':
 
