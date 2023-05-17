@@ -10,6 +10,11 @@ class PrimeFieldElement:
         self.a_int = a
         self.p_int = p
 
+    # for print function
+    def __str__(self):
+    
+        return "{}".format(self.a)
+
     # adding two objects  
     def __add__(self, other):
 
