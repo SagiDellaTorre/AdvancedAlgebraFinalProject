@@ -16,10 +16,11 @@ def main():
     print(f"a, b, c are: {a},{b}, {c}")
     print(f"a + b = {a + b}")
     print(f"a + c = {a + c}")
-    print(f"a - b = {a-b}")
+    print(f"a - b = {a - b}")
     print(f"a - c = {a - c}")
-    print(f"a * b = {a*b}")
-    print(f"a / b = {a/b}")
+    print(f"a * b = {a * b}")
+    print(f"a / a = {a / a}")
+    print(f"a / b = {a / b}")
     print(f"a / c = {a / c}")
     print(f"inverse of a: {a.inverse()}")
     print(f"inverse of b: {b.inverse()}")
@@ -29,7 +30,7 @@ def main():
     #########################################
     # section (3) - basic operators
     #########################################
-    l = FiniteField(p=7, fx=[1,1,1])
+    # l = FiniteField(p=7, fx=[1,1,1])
 
 
 
