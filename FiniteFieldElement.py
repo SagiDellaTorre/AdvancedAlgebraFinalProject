@@ -96,7 +96,7 @@ class FiniteFieldElement:
         if all(num == 0 for num in other.a_coeff):
             raise Exception("Dividing by zero is not allowed")
 
-        #option 1 (Amit): # TODO: still doesn't work correctly
+        # option 1 (Amit): # TODO: still doesn't work correctly
         """
         for (a/b):
         We are using galois poly % operation to get the modulo of the division
@@ -105,7 +105,8 @@ class FiniteFieldElement:
         for 2 given poly in the field, the division can't be greate degree of f(x), 
         so we dont need to use:   () % self.l.fx_poly
         """
-        return_poly = (self.a_poly % other.a_poly)
+        # return_poly = (self.a_poly % other.a_poly)  # TODO: not sure if % or //
+        return_poly = (self.a_poly // other.a_poly)   # TODO: not sure if % or //
         return_FiniteFieldElement = self.galois_poly_to_element(return_poly)
         return return_FiniteFieldElement
 
@@ -115,3 +116,8 @@ class FiniteFieldElement:
         # #option 2:
         # c_mat = self.a_mat @ np.linalg.inv(other.a_mat)
         # return self.mat_to_poly(c_mat)
+
+
+
+if __name__ == '__main__':
+    pass

@@ -136,9 +136,15 @@ def run_section_5():
     print(f"a * b as matrix: \n{ab_mul.get_matrix()}\n")
 
     # div
+    aa_div = a / a
+    print(f"a / a =\n{aa_div}")  # should be 1
+    print(f"a / a as matrix: \n{aa_div.get_matrix()}\n")
+
     ab_div = a / b
-    print(f"a / b =\n{ab_div}")  # 36 # TODO verify and raise exception if devide by 0
+    print(f"a / b =\n{ab_div}")  # 36 # TODO verify and raise exception if divide by 0
     print(f"a / b as matrix: \n{ab_div.get_matrix()}\n")
+    # check for x=6 if a/b=40
+    print(f"a/b at x=6: {ab_div.a_poly(6)}, should be 40")  # TODO:check if correct
 
 
     # # Test Exception

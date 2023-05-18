@@ -41,3 +41,7 @@ class PrimeFieldElement:
     def __truediv__(self, other):
 
         return self.a * other.inverse()
+
+
+if __name__ == '__main__':
+    pass

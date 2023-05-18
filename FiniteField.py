@@ -86,3 +86,8 @@ class FiniteField:
         :return:
         """
         return self.GFP(np.pad(a, (self.n_poly_fx-len(a), 0)))
+
+
+
+if __name__ == '__main__':
+    pass
