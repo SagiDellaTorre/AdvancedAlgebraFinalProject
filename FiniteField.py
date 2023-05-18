@@ -5,42 +5,63 @@ class FiniteField:
 
     # constructor
     def __init__(self, p, fx):
-
-        self.p = p
-        self.GFP = galois.GF(p)
-        self.fx_coff = fx
-        self.fx_poly =  galois.Poly(fx[::-1], field=self.GFP)
-        self.n_poly_fx = len(fx)-1
-        self.basis = self.set_basis()
+        """
+        define a Finite Field element.
+        :param p:  a prime number to set the field
+        :param fx: an irreducible polynom coefficients. a_n * x^n + ... + a_1 * x + a_0
+                   so the fx list is [a_0, a_1, ...]
+        """
+        self.p         = p                                       # a prime number
+        self.GFP       = galois.GF(p)                            # the galois field
+        self.fx_coeff  = fx                                      # the poly coefficients
+        self.fx_poly   =  galois.Poly(fx[::-1], field=self.GFP)  # a galois object for the fx polynom
+        self.n_poly_fx = len(fx)-1                               # the degree of fx, as int number
+        self.basis = self.set_basis()                            # list, holding a basis matrices
 
     def set_basis(self):
-
+        """
+        This method create a basis matrices list.
+        For example: for GL3[k] the besis will be of len 3, with 3 matrices of shape 3x3.
+        :return: the basis
+        """
         basis = []
         for i in range(self.n_poly_fx):
-
+            # append a zero galois matrix, later to be filled with the basis[i]
             basis.append(self.GFP(np.zeros((self.n_poly_fx,self.n_poly_fx), dtype=int)))
-            arr = [1 if x == i else 0 for x in range(self.n_poly_fx)]
+
+            # Create a one-hot-encoding vector
+            vac1 = [1 if x == i else 0 for x in range(self.n_poly_fx)]
 
             for j in range(self.n_poly_fx):
-                
-                arr2 = [1 if x == j else 0 for x in range(self.n_poly_fx)]
-
-                poly_mul = self.poly_mul(arr,arr2)
+                vec2 = [1 if x == j else 0 for x in range(self.n_poly_fx)]
+                poly_mul = self.poly_mul(vac1, vec2)  # find the [Tg]_B transformation
+                # insert the vector value in reverse order (to match between our convention and galois)
                 for k in range(len(poly_mul)):
-
-                    basis[i][j,k] = poly_mul[-k-1] # x^1 * (x^2 + x + 1)
+                    basis[i][j,k] = poly_mul[-k-1]  # test case: x^1 * (x^2 + x + 1)
 
         return basis
     
     def poly_mul(self, a, b):
-
+        """
+        This method takes 2 poly' a and b and multiply them.
+        the return value is the residual poly in the Finite Field.
+        :param a: poly coeff' of max degree < degree(fx)
+        :param b: poly coeff' of max degree < degree(fx)
+        :return: the residual poly coeff' in the field, i.e degree<degree(fx)
+        """
         a = galois.Poly(a[::-1], field=self.GFP)
         b = galois.Poly(b[::-1], field=self.GFP)
-        new_array = a * b
-        new_array_reduced = new_array % self.fx_poly
+        c = a * b
+        c_res = c % self.fx_poly  # this is a galois poly' operation! return a poly' object!
 
-        return self.zeros_padd_array(new_array_reduced.coeffs)
-    
-    def zeros_padd_array(self, a):
+        return self.zeros_pad_array(c_res.coeffs)
 
+    def zeros_pad_array(self, a):
+        """
+        take a galois poly' object coeff' list, and return list padded with zeros
+        since galois poly' coeff' list for a=1 is [1], but we want it to be in the len of the ply
+        i.e: in a field where the poly' are at max degree of 3: [1,0,0,0]
+        :param a: galois poly' coeff' list
+        :return:
+        """
         return self.GFP(np.pad(a, (self.n_poly_fx-len(a),0)))

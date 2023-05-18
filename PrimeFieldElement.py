@@ -6,7 +6,7 @@ class PrimeFieldElement:
     def __init__(self, a, p):
 
         self.GFP = galois.GF(p)
-        self.a = self.GFP(a)
+        self.a = self.GFP(a)   # TODO: check a can be in the field
         self.a_int = a
         self.p_int = p
 
@@ -35,7 +35,7 @@ class PrimeFieldElement:
 
         # find a_inv and t such that: a * a_inv + p * t = 1
         gcd, a_inv_int, t = galois.egcd(self.a_int, self.p_int)
-        return a_inv_int % self.p_int
+        return a_inv_int % self.p_int  # TODO: ERROR: this return an int, and not a PrimeFieldElement object
 
     # adding two objects  
     def __truediv__(self, other):

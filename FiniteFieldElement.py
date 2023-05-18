@@ -5,14 +5,13 @@ class FiniteFieldElement:
 
     # constructor
     def __init__(self, l, a):
-    
         """
         l : FiniteField 
         a : array of polynomial coefficients
         """
 
         if max(a) >= l.p or min(a) < 0:
-            raise Exception("a must be element in the prime field p")
+            raise Exception(f"a must be element in the prime field p={l.p}")
 
         self.l = l
         self.a_poly = galois.Poly(a[::-1], field=self.l.GFP)
