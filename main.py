@@ -109,18 +109,47 @@ def run_section_5():
 
     # --- Pretty-print of the Field and some element in the field ---
     print(f"l = \n{l}")                          # the FiniteField
-    print(f"a as poly' :   \n{a}")               # FiniteFieldElement as a polynomial
+    print(f"a as poly':    \n{a}")               # FiniteFieldElement as a polynomial
     print(f"a as matrix:   \n{a.get_matrix()}")  # FiniteFieldElement as a matrix
     print(f"a as a vector: \n{a.get_vector()}")  # FiniteFieldElement as a vector
-    print(f"b as poly': \n{b}\n")                  # FiniteFieldElement
 
-    # --- Basic operation in the field in matrix representation ---
-    print("basic operators in the field in matrix representation:")
-    print(f"a + b =\n{a + b}")  # 7x^2 + 5x + 3
-    print(f"a - b =\n{a - b}")  # 46x^2 + 46x + 46
-    print(f"a * b =\n{a * b}")  # 27x^2 + 16x + 40
-    print(f"a / b =\n{a / b}")  # 36 # TODO verify and raise exception if devide by 0
-    
+    print(f"b as poly':    \n{b}")                 # FiniteFieldElement as a polynomial
+    print(f"b as matrix:   \n{b.get_matrix()}")    # FiniteFieldElement as a matrix
+    print(f"b as a vector: \n{b.get_vector()}\n")  # FiniteFieldElement as a vector
+    # ---------------------------------------
+
+    # --- Basic operation in the finite field ---
+    print("---basic operators in the finite field: ---")
+    # Sum:
+    ab_sum = a+b
+    print(f"a + b =\n{ab_sum}")  # 7x^2 + 5x + 3
+    print(f"a + b as matrix: \n{ab_sum.get_matrix()}\n")
+
+    # sub
+    ab_sub = a - b
+    print(f"a - b =\n{ab_sub}")  # 46x^2 + 46x + 46
+    print(f"a - b as matrix: \n{ab_sub.get_matrix()}\n")
+
+    # mul
+    ab_mul = a * b
+    print(f"a * b =\n{ab_mul}")  # 27x^2 + 16x + 40
+    print(f"a * b as matrix: \n{ab_mul.get_matrix()}\n")
+
+    # div
+    ab_div = a / b
+    print(f"a / b =\n{ab_div}")  # 36 # TODO verify and raise exception if devide by 0
+    print(f"a / b as matrix: \n{ab_div.get_matrix()}\n")
+
+
+    # # Test Exception
+    # print("Test Exception - divide by zero")
+    # c = FiniteFieldElement(l, [0, 0, 0])  # an object of finite field element
+    # print(f"c as poly': \n{c}")  # FiniteFieldElement as a polynomial
+    # ac_div = a / c
+    # print(f"a / c =\n{ac_div}")
+
+
+
 def main():
     # run_section_2()
     # run_section_3()
@@ -140,6 +169,9 @@ if __name__ == '__main__':
                 i^2+2i+1 = 0 ?
             if all are not.. it is irreducible
     
-    2.      
+    2. (Done)
+        when operating with FiniteFieldElement, the return object is galois poly.
+        than means, we can't use it anymore later as a FiniteFieldElement.
+        should we return a       
     """
     main()

@@ -10,7 +10,7 @@ class FiniteFieldElement:
         a : array of polynomial coefficients
         """
         if max(a) >= l.p or min(a) < 0:
-            raise Exception(f"a must be element in the prime field p={l.p}")
+            raise Exception(f"a must be element in the prime field, where p={l.p}")
 
         self.l       = l                                       # The galois field object
         self.a_poly  = galois.Poly(a[::-1], field=self.l.GFP)  # a as a galois poly' object
@@ -55,8 +55,9 @@ class FiniteFieldElement:
             --------
         """
         mat = self.l.GFP(np.zeros((self.n_coeff, self.n_coeff), dtype=int))
-        for i in range(self.n_coeff):
-            mat = mat + self.a_poly.coeffs[-i-1]*self.l.basis[i]
+        for i in range(self.n_coeff): # TODO: varify
+            # mat = mat + self.a_poly.coeffs[-i-1]*self.l.basis[i]  # original, didn't work for case with a_n=0
+            mat = mat + self.a_coeff[i] * self.l.basis[i]  # Amit: i think it is better to use the a_coeff list
 
         return mat
     
@@ -65,27 +66,52 @@ class FiniteFieldElement:
         this method translate from matrix representation to vector representation
         """
         pass
- 
+
+    def galois_poly_to_element(self, poly):
+        return_coeff = self.l.zeros_pad_array(poly.coeffs)
+        return_FiniteFieldElement = FiniteFieldElement(l=self.l, a=return_coeff[::-1])
+        return return_FiniteFieldElement
+
     # adding two objects  
     def __add__(self, other):
-        return self.a_poly + other.a_poly
+        return_poly     = self.a_poly + other.a_poly
+        return_FiniteFieldElement = self.galois_poly_to_element(return_poly)
+        return return_FiniteFieldElement
     
-    # substract two objects  
+    # subtract two objects
     def __sub__(self, other):
-        return self.a_poly - other.a_poly
+        return_poly = self.a_poly - other.a_poly
+        return_FiniteFieldElement = self.galois_poly_to_element(return_poly)
+        return return_FiniteFieldElement
     
     # multiply two objects 
     def __mul__(self, other):
-        return (self.a_poly * other.a_poly) % self.l.fx_poly  # multiply poly, and then modulo fx
+        # multiply poly, and then modulo fx. all are galois poly object
+        return_poly = (self.a_poly * other.a_poly) % self.l.fx_poly
+        return_FiniteFieldElement = self.galois_poly_to_element(return_poly)
+        return return_FiniteFieldElement
     
-    # dividing two objects
+    # divide two objects
     def __truediv__(self, other):
         if all(num == 0 for num in other.a_coeff):
-            raise Exception("Divide by zero is not allowed") 
+            raise Exception("Dividing by zero is not allowed")
 
-        #option 1: 
-        return (self.a_mat // other.a_poly) % self.l.fx_poly
-    
-        #option 2:
-        c_mat = self.a_mat @ np.linalg.inv(other.a_mat)
-        return self.mat_to_poly(c_mat)
+        #option 1 (Amit): # TODO: still doesn't work correctly
+        """
+        for (a/b):
+        We are using galois poly % operation to get the modulo of the division
+        After the % operation, we should varify the result poly' is indeed in the field.
+
+        for 2 given poly in the field, the division can't be greate degree of f(x), 
+        so we dont need to use:   () % self.l.fx_poly
+        """
+        return_poly = (self.a_poly % other.a_poly)
+        return_FiniteFieldElement = self.galois_poly_to_element(return_poly)
+        return return_FiniteFieldElement
+
+        # option 1 (original by Sagi): Amit: why using self.a_mat? and not self.a_poly?
+        # return (self.a_mat // other.a_poly) % self.l.fx_poly
+
+        # #option 2:
+        # c_mat = self.a_mat @ np.linalg.inv(other.a_mat)
+        # return self.mat_to_poly(c_mat)

@@ -16,11 +16,12 @@ class FiniteField:
         self.fx_coeff  = fx                                      # the poly coefficients
         self.fx_poly   =  galois.Poly(fx[::-1], field=self.GFP)  # a galois object for the fx polynom
         self.n_poly_fx = len(fx)-1                               # the degree of fx, as int number
-        self.basis = self.set_basis()                            # list, holding a basis matrices
+        self.basis     = self.set_basis()                        # list, holding a basis matrices
 
         self.varify_irreducible()
 
     def varify_irreducible(self):
+        # TODO: is it right?
         """
         we should check that the poly is indeed irreducible for degrees 2-3,
         we can do that by checking all the possible options.
@@ -33,8 +34,6 @@ class FiniteField:
             for i in range(0, self.p):
                 if self.fx_poly(i) == 0:
                     raise Exception(f"Poly' f(x) must be irreducible!. x={i} is a root value of f(x)")
-
-
 
     # for print function
     def __str__(self):
@@ -86,4 +85,4 @@ class FiniteField:
         :param a: galois poly' coeff' list
         :return:
         """
-        return self.GFP(np.pad(a, (self.n_poly_fx-len(a),0)))
+        return self.GFP(np.pad(a, (self.n_poly_fx-len(a), 0)))
