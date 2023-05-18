@@ -18,6 +18,11 @@ class FiniteField:
         self.n_poly_fx = len(fx)-1                               # the degree of fx, as int number
         self.basis = self.set_basis()                            # list, holding a basis matrices
 
+    # for print function
+    def __str__(self):
+    
+        return f"F{self.p}({self.fx_poly})"
+
     def set_basis(self):
         """
         This method create a basis matrices list.
