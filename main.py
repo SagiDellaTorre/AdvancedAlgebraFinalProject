@@ -6,12 +6,9 @@ import numpy as np
 
 
 def run_section_2():
-    #########################################
-    # section (2) - basic operators
-    #########################################
-    print(f"=============")
+    print(f"=============================")
     print(f"section (2) - basic operators")
-    print(f"=============")
+    print(f"=============================")
 
     a = PrimeFieldElement(3, 7)
     b = PrimeFieldElement(5, 7)
@@ -47,44 +44,65 @@ def run_section_2():
 
 
 def run_section_4():
-    #########################################
-    # section (4) - matrix representation
-    #########################################
     print(f"====================================")
     print(f"section (4) - matrix representation")
     print(f"====================================")
 
-    p        = 47          # prime number to set the field
-    fx_coeff = [42,3,0,1]  # a irreducible poly' coeff': for a_n*x^n+...+a_1*x+a_0 -> [a_0, a_1, ...]
+    # Define a Finite Field:
+    p        = 47                 # prime number to set the field
+    fx_coeff = [42, 3, 0, 1]      # a irreducible poly' coeff': for a_n*x^n+...+a_1*x+a_0 -> [a_0, a_1, ...]
     l = FiniteField(p, fx_coeff)  # the finite field object
-    a = FiniteFieldElement(l, [1, 2, 3])  # an object of finite field element
 
-    print(f"polynomial a in matrix representation:\n{a.a_mat}")  # [[1,  2,  3], [15, 39,  2], [10,  9, 39]]
+    # Define a poly' by its coeff'
+    a_coeff = [1, 2, 3]
+    b_coeff = [1, 1, 1]
+    a = FiniteFieldElement(l, a_coeff)  # an object of finite field element
+    b = FiniteFieldElement(l, b_coeff)  # an object of finite field element
+
+    print(f"polynomial a coeff' are:\n{a_coeff}")
+    print(f"polynomial a in matrix representation:\n{a.a_mat}\n")  # [[1, 2, 3], [15, 39, 2], [10, 9, 39]]
+
+    print(f"polynomial b coeff' are:\n{b_coeff}")
+    print(f"polynomial b in matrix representation:\n{b.a_mat}")  # [[1, 1, 1], [5, 45  1], [5, 2, 45]]
+
 
 def run_section_5():
-    #########################################
-    # section (5) - basic operation for FiniteFieldElement
-    #########################################
-    print(f"====================================")
+    """
+    In this section show:
+    (1) pretty-print
+    (2) basic matrix operations:
+        2.1 add
+        2.1 sub
+        2.3 mul
+        2.3 truediv
+    ** Remember to raise an exception when dividing by zero.
+    """
+    print(f"====================================================")
     print(f"section (5) - basic operation for FiniteFieldElement")
-    print(f"====================================")
+    print(f"====================================================")
 
-    p        = 47          # prime number to set the field
-    fx_coeff = [42,3,0,1]  # a irreducible poly' coeff': for a_n*x^n+...+a_1*x+a_0 -> [a_0, a_1, ...]
+    # Define a Finite Field
+    p        = 47                 # prime number to set the field
+    fx_coeff = [42, 3, 0, 1]      # a irreducible poly' coeff': for a_n*x^n+...+a_1*x+a_0 -> [a_0, a_1, ...]
     l = FiniteField(p, fx_coeff)  # the finite field object
+
+    # Define 2 poly in the field:
     a = FiniteFieldElement(l, [1, 2, 3])  # an object of finite field element
     b = FiniteFieldElement(l, [2, 3, 4])  # an object of finite field element
 
-    print(f"l = \n{l}") # the FiniteField
-    print(f"a = \n{a}") # FiniteFieldElement as a polynomial
-    print(f"a = \n{a.get_matrix()}") # FiniteFieldElement as a matrix
-    print(f"a = \n{a.get_vector()}") # FiniteFieldElement as a vector
-    print(f"b = \n{b}") # FiniteFieldElement
-    print("\nbasic operators:")
+    # --- Pretty-print of the Field and some element in the field ---
+    print(f"l = \n{l}")                          # the FiniteField
+    print(f"a as poly' :   \n{a}")               # FiniteFieldElement as a polynomial
+    print(f"a as matrix:   \n{a.get_matrix()}")  # FiniteFieldElement as a matrix
+    print(f"a as a vector: \n{a.get_vector()}")  # FiniteFieldElement as a vector
+    print(f"b as poly': \n{b}\n")                  # FiniteFieldElement
+
+    # --- Basic operation in the field in matrix representation ---
+    print("basic operators in the field in matrix representation:")
     print(f"a + b =\n{a + b}")  # 7x^2 + 5x + 3
     print(f"a - b =\n{a - b}")  # 46x^2 + 46x + 46
     print(f"a * b =\n{a * b}")  # 27x^2 + 16x + 40
-    print(f"a / b =\n{a / b}")  # 36 #TODO verify and raise exeption if devide by 0
+    print(f"a / b =\n{a / b}")  # 36 # TODO verify and raise exception if devide by 0
     
 def main():
     # run_section_2()

@@ -9,16 +9,16 @@ class FiniteFieldElement:
         l : FiniteField 
         a : array of polynomial coefficients
         """
-
         if max(a) >= l.p or min(a) < 0:
             raise Exception(f"a must be element in the prime field p={l.p}")
 
-        self.l = l
-        self.a_poly = galois.Poly(a[::-1], field=self.l.GFP)
-        self.a_coeff = a
-        self.n_coeff = len(a)
-        self.n_poly = self.n_coeff - 1
+        self.l       = l                                       # The galois field object
+        self.a_poly  = galois.Poly(a[::-1], field=self.l.GFP)  # a as a galois poly' object
+        self.a_coeff = a                                       # list of the coeff' for a. Note the order!
+        self.n_coeff = len(a)                                  # number of coeff'
+        self.n_poly  = self.n_coeff - 1                        # The poly' degree
 
+        # Varify the degree of the given poly' should be exactly [degree(fx)-1]
         if not self.n_poly == self.l.n_poly_fx - 1:
             raise Exception("The degree of the polynomial illegal in the corresponding field extension l") 
 
@@ -44,17 +44,23 @@ class FiniteFieldElement:
 
     def mat_represent(self):
         """
-        this method calculate the matrix representation of an instance
-        """
+        this method calculate the matrix representation of an instance.
+        The Finite field object holds a basis list of matrices.
 
-        mat = self.l.GFP(np.zeros((self.n_coeff,self.n_coeff), dtype=int))
+        The total poly' matrix representation is than given by:
+            for a poly: a_n*x^n+...+a_1*x+a_0 -> [a_0, a_1, ...]
+            ---------
+            a_mat = a_0*basis[0] + a_1*basis[1] + ... + a_n*basis[n]
+            where basis[i] is a matrix!
+            --------
+        """
+        mat = self.l.GFP(np.zeros((self.n_coeff, self.n_coeff), dtype=int))
         for i in range(self.n_coeff):
             mat = mat + self.a_poly.coeffs[-i-1]*self.l.basis[i]
 
         return mat
     
-    def mat_to_poly(self, a_mat): #TODO continue
-
+    def mat_to_poly(self, a_mat):  # TODO continue
         """
         this method translate from matrix representation to vector representation
         """
@@ -62,22 +68,18 @@ class FiniteFieldElement:
  
     # adding two objects  
     def __add__(self, other):
-
         return self.a_poly + other.a_poly
     
     # substract two objects  
     def __sub__(self, other):
-
         return self.a_poly - other.a_poly
     
     # multiply two objects 
     def __mul__(self, other):
-
-        return (self.a_poly * other.a_poly) % self.l.fx_poly # multiply poly, and then modulo fx
+        return (self.a_poly * other.a_poly) % self.l.fx_poly  # multiply poly, and then modulo fx
     
-    # adding two objects  
+    # dividing two objects
     def __truediv__(self, other):
-
         if all(num == 0 for num in other.a_coeff):
             raise Exception("Divide by zero is not allowed") 
 

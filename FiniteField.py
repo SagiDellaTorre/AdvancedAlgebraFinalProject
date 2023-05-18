@@ -20,8 +20,7 @@ class FiniteField:
 
     # for print function
     def __str__(self):
-    
-        return f"F{self.p}({self.fx_poly})"
+        return f"F[{self.p}]({self.fx_poly})"
 
     def set_basis(self):
         """
