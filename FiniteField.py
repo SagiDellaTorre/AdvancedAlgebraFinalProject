@@ -2,23 +2,45 @@ import galois
 import numpy as np
 
 class FiniteField:
-    """
-    see section (3) in the pdf
-    This class represents 'l':
-              l ∼=k[x]/⟨f(x)⟩
-    """
+
     # constructor
     def __init__(self, p, fx):
-        """
 
-        :param p:  a prime number
-        :param fx: a list of polynomial's coefficients.
-                   given in common printed form a_n * x^n + ... + a_1 * x + a_0
-                   and as a list of coefficients [a_0, a_1, ...]. Note the order.
-        """
-        self.p = p      # assume that p is indeed prime
-        self.fx = fx    # assume that fx is indeed irreducible
+        self.p = p
+        self.GFP = galois.GF(p)
+        self.fx_coff = fx
+        self.fx_poly =  galois.Poly(fx[::-1], field=self.GFP)
+        self.n_poly_fx = len(fx)-1
+        self.basis = self.set_basis()
 
-        # make the poly' a Monic polynomial (so a_n=1)
-        # TODO: the coefficients should be in F. do we make use they are?
-        self.fx = (np.array(self.fx) / self.fx[-1]).tolist()
+    def set_basis(self):
+
+        basis = []
+        for i in range(self.n_poly_fx):
+
+            basis.append(self.GFP(np.zeros((self.n_poly_fx,self.n_poly_fx), dtype=int)))
+            arr = [1 if x == i else 0 for x in range(self.n_poly_fx)]
+
+            for j in range(self.n_poly_fx):
+                
+                arr2 = [1 if x == j else 0 for x in range(self.n_poly_fx)]
+
+                poly_mul = self.poly_mul(arr,arr2)
+                for k in range(len(poly_mul)):
+
+                    basis[i][j,k] = poly_mul[-k-1] # x^1 * (x^2 + x + 1)
+
+        return basis
+    
+    def poly_mul(self, a, b):
+
+        a = galois.Poly(a[::-1], field=self.GFP)
+        b = galois.Poly(b[::-1], field=self.GFP)
+        new_array = a * b
+        new_array_reduced = new_array % self.fx_poly
+
+        return self.zeros_padd_array(new_array_reduced.coeffs)
+    
+    def zeros_padd_array(self, a):
+
+        return self.GFP(np.pad(a, (self.n_poly_fx-len(a),0)))

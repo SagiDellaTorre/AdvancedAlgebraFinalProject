@@ -1,15 +1,34 @@
 import galois
+import numpy as np
 
 class FiniteFieldElement:
-    """
-    see section (3) in the pdf
-    This class represents α ∈ l:
-        an element α ∈ l can be given as [a0, a1, . . . , an−1] or as a0 + a1*x + · · · + a_(n−1)*x^(n−1)
-        for some coefficients ai ∈ k
 
-    In particular, the cardinality of l is p^n, and you can assume it is less than 2^32.
-    """
     # constructor
-    def __init__(self, a):
-        self.a = a
-        self.n = len(a)
+    def __init__(self, l, a):
+    
+        """
+        l : FiniteField 
+        a : array of polynomial coefficients
+        """
+
+        if max(a) >= l.p or min(a) < 0:
+            raise Exception("a must be element in the prime field p")
+
+        self.l = l
+        self.a_poly = galois.Poly(a[::-1], field=self.l.GFP)
+        self.a_coeff = a
+        self.n_coeff = len(a)
+        self.n_poly = self.n_coeff - 1
+
+        if not self.n_poly == self.l.n_poly_fx - 1:
+            raise Exception("The degree of the polynomial illegal in the corresponding field extension l") 
+
+        self.a_mat = self.mat_represent()
+
+    def mat_represent(self):
+
+        mat = self.l.GFP(np.zeros((self.n_coeff,self.n_coeff), dtype=int))
+        for i in range(self.n_coeff):
+            mat = mat + self.a_poly.coeffs[-i-1]*self.l.basis[i]
+
+        return mat
