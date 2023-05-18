@@ -18,6 +18,24 @@ class FiniteField:
         self.n_poly_fx = len(fx)-1                               # the degree of fx, as int number
         self.basis = self.set_basis()                            # list, holding a basis matrices
 
+        self.varify_irreducible()
+
+    def varify_irreducible(self):
+        """
+        we should check that the poly is indeed irreducible for degrees 2-3,
+        we can do that by checking all the possible options.
+        for example,for F_7, and poly x^2+2x+1. we should do:
+            for i in range(0,7):
+                i^2+2i+1 = 0 ?
+            if all are not.. it is irreducible
+        """
+        if self.n_poly_fx == 2 or self.n_poly_fx == 3:
+            for i in range(0, self.p):
+                if self.fx_poly(i) == 0:
+                    raise Exception(f"Poly' f(x) must be irreducible!. x={i} is a root value of f(x)")
+
+
+
     # for print function
     def __str__(self):
         return f"F[{self.p}]({self.fx_poly})"

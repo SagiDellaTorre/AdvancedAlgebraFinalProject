@@ -43,6 +43,23 @@ def run_section_2():
     print(f"a @ inv(a) =\n{a @ np.linalg.inv(a)}")  # [[1 0] [0 1]] Identity matrix
 
 
+def run_section_3():
+    print(f"====================================")
+    print(f"section (3) - matrix representation")
+    print(f"====================================")
+    # Define a Finite Field:
+    p        = 7                  # prime number to set the field
+    fx_coeff = [1, 0, 1]          # a irreducible poly' coeff': for a_n*x^n+...+a_1*x+a_0 -> [a_0, a_1, ...]
+    l = FiniteField(p, fx_coeff)  # the finite field object
+    print(f"finite field l is:\n{l}")
+
+    # # Example for setting the field with a !reducible! poly
+    # p        = 7                  # prime number to set the field
+    # fx_coeff = [1, 2, 1]          # a irreducible poly' coeff': for a_n*x^n+...+a_1*x+a_0 -> [a_0, a_1, ...]
+    # l = FiniteField(p, fx_coeff)  # the finite field object
+    # print(f"finite field l is:\n{l}")
+
+
 def run_section_4():
     print(f"====================================")
     print(f"section (4) - matrix representation")
@@ -106,9 +123,23 @@ def run_section_5():
     
 def main():
     # run_section_2()
+    # run_section_3()
     # run_section_4()
     run_section_5()
 
 
 if __name__ == '__main__':
+    # TODO:
+    """
+    General TODO:
+    1. (Done) 
+        in section 3: we should check that the poly is indeed irreducible for degrees 2-3, 
+        we can do that by checking all the possible options. 
+        for example,for F_7, and poly x^2+2x+1. we should do:
+            for i in range(0,7):
+                i^2+2i+1 = 0 ?
+            if all are not.. it is irreducible
+    
+    2.      
+    """
     main()
