@@ -104,8 +104,13 @@ def run_section_5():
     l = FiniteField(p, fx_coeff)  # the finite field object
 
     # Define 2 poly in the field:
+    # # Test case 1:
     a = FiniteFieldElement(l, [1, 2, 3])  # an object of finite field element
     b = FiniteFieldElement(l, [2, 3, 4])  # an object of finite field element
+
+    # Test case 2:
+    # a = FiniteFieldElement(l, [1, 0, 3])   # an object of finite field element
+    # b = FiniteFieldElement(l, [3, 5, 45])  # an object of finite field element
 
     # --- Pretty-print of the Field and some element in the field ---
     print(f"l = \n{l}")                          # the FiniteField
@@ -141,10 +146,8 @@ def run_section_5():
     print(f"a / a as matrix: \n{aa_div.get_matrix()}\n")
 
     ab_div = a / b
-    print(f"a / b =\n{ab_div}")  # 36 # TODO verify and raise exception if divide by 0
+    print(f"a / b =\n{ab_div}")  #  # TODO verify and raise exception if divide by 0
     print(f"a / b as matrix: \n{ab_div.get_matrix()}\n")
-    # check for x=6 if a/b=40
-    print(f"a/b at x=6: {ab_div.a_poly(6)}, should be 40")  # TODO:check if correct
 
 
     # # Test Exception

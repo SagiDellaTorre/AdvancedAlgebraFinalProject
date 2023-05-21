@@ -24,12 +24,6 @@ class FiniteFieldElement:
 
         self.a_mat = self.mat_represent()
 
-    def __str__(self):
-        """
-        return instance as polynomials
-        """
-        return f"{self.a_poly}"
-
     def get_matrix(self):
         """
         return instance as matrix
@@ -60,17 +54,17 @@ class FiniteFieldElement:
             mat = mat + self.a_coeff[i] * self.l.basis[i]  # Amit: i think it is better to use the a_coeff list
 
         return mat
-    
-    def mat_to_poly(self, a_mat):  # TODO continue
-        """
-        this method translate from matrix representation to vector representation
-        """
-        pass
 
     def galois_poly_to_element(self, poly):
         return_coeff = self.l.zeros_pad_array(poly.coeffs)
         return_FiniteFieldElement = FiniteFieldElement(l=self.l, a=return_coeff[::-1])
         return return_FiniteFieldElement
+
+    def __str__(self):
+        """
+        return instance as polynomials
+        """
+        return f"{self.a_poly}"
 
     # adding two objects  
     def __add__(self, other):
@@ -93,29 +87,43 @@ class FiniteFieldElement:
     
     # divide two objects
     def __truediv__(self, other):
-        if all(num == 0 for num in other.a_coeff):
+        """
+        method for dividing 2 poly'. a/b
+        self has the poly a, other has the poly b.
+        we use matrix operation. a*(b^-1)
+        the return poly is the rist row of the result matrix.
+
+        Note: all poly's are in GL(), so they should all have a valid inverse matrix.
+        :param other:  poly b
+        :return: a/b as a FiniteFieldElement object
+        """
+        if all(num == 0 for num in other.a_coeff): # TODO: maybe change for only a ERROR print and return [0,0...0] poly
             raise Exception("Dividing by zero is not allowed")
 
-        # option 1 (Amit): # TODO: still doesn't work correctly
-        """
-        for (a/b):
-        We are using galois poly % operation to get the modulo of the division
-        After the % operation, we should varify the result poly' is indeed in the field.
-
-        for 2 given poly in the field, the division can't be greate degree of f(x), 
-        so we dont need to use:   () % self.l.fx_poly
-        """
-        # return_poly = (self.a_poly % other.a_poly)  # TODO: not sure if % or //
-        return_poly = (self.a_poly // other.a_poly)   # TODO: not sure if % or //
-        return_FiniteFieldElement = self.galois_poly_to_element(return_poly)
-        return return_FiniteFieldElement
-
-        # option 1 (original by Sagi): Amit: why using self.a_mat? and not self.a_poly?
+        # # ================
+        # # option 1 (Amit): # TODO: still doesn't work correctly
+        # # -------------
+        # # for (a/b):
+        # # We are using galois poly % operation to get the modulo of the division
+        # # After the % operation, we should varify the result poly' is indeed in the field.
+        # #
+        # # for 2 given poly in the field, the division can't be greate degree of f(x),
+        # # so we dont need to use:   () % self.l.fx_poly
+        # # -------------
+        #
+        # # return_poly = (self.a_poly % other.a_poly)  # TODO: not sure if % or //
+        # return_poly = (self.a_poly // other.a_poly)   # TODO: not sure if % or //
+        # return_FiniteFieldElement = self.galois_poly_to_element(return_poly)
+        # return return_FiniteFieldElement
+        #
+        # # option 1 (original by Sagi): Amit: why using self.a_mat? and not self.a_poly?
         # return (self.a_mat // other.a_poly) % self.l.fx_poly
+        # # ================
 
-        # #option 2:
-        # c_mat = self.a_mat @ np.linalg.inv(other.a_mat)
-        # return self.mat_to_poly(c_mat)
+        #option 2:
+        c_mat = self.a_mat @ np.linalg.inv(other.a_mat)
+        return_FiniteFieldElement = FiniteFieldElement(l=self.l, a=c_mat[0, :])
+        return return_FiniteFieldElement
 
 
 
