@@ -158,12 +158,54 @@ def run_section_5():
     # print(f"a / c =\n{ac_div}")
 
 
+def run_section_6():
+    """
+    The input is a poly' and an int number
+    The output should be the poly^n
+    :return:
+    """
+    pass
+
+def run_section_7():
+    """
+    Input is: poly' a in 'l^x' (l without 0).
+    return value is: the order of a. that means, how many times we need to multiply a*...*a to get 1 (identity)
+
+    Because l^x is cyclic - there should be always a solution for this problem
+    :return: order(a)
+    """
+    pass
+
+def run_section_8():
+    """
+    (8) Implement a method for FiniteField that finds a generator 'g' of the multiplicative which we know is cyclic.
+
+    Find a generator g: we need to find element in l^x so that for each a in l^x we can write
+                            a = g^n, for some int n
+
+    :return:
+    """
+    pass
+
+def run_section_9():
+    """
+    Using the BSGS algorithm, write a function to solve the discrete logarithm problem.
+    That is, given g^t in l^x, find the natural number 1<=t<=p^n
+
+    :return: 
+    """
+    
+    pass
 
 def main():
     # run_section_2()
     # run_section_3()
     # run_section_4()
     run_section_5()
+    # run_section_6()
+    # run_section_7()
+    # run_section_8()
+    # run_section_9()
 
 
 if __name__ == '__main__':
