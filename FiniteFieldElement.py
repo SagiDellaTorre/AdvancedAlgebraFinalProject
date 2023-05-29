@@ -22,7 +22,8 @@ class FiniteFieldElement:
         if not self.n_poly == self.l.n_poly_fx - 1:
             raise Exception("The degree of the polynomial illegal in the corresponding field extension l") 
 
-        self.a_mat = self.mat_represent()
+        self.a_mat    = self.mat_represent()
+        self.identity = self.l.GFP(np.identity(self.n_coeff, dtype=int))  # galois identity matrix
 
     def get_matrix(self):
         """
@@ -49,9 +50,8 @@ class FiniteFieldElement:
             --------
         """
         mat = self.l.GFP(np.zeros((self.n_coeff, self.n_coeff), dtype=int))
-        for i in range(self.n_coeff): # TODO: varify
-            # mat = mat + self.a_poly.coeffs[-i-1]*self.l.basis[i]  # original, didn't work for case with a_n=0
-            mat = mat + self.a_coeff[i] * self.l.basis[i]  # Amit: i think it is better to use the a_coeff list
+        for i in range(self.n_coeff):
+            mat = mat + self.a_coeff[i] * self.l.basis[i]
 
         return mat
 
@@ -97,34 +97,34 @@ class FiniteFieldElement:
         :param other:  poly b
         :return: a/b as a FiniteFieldElement object
         """
-        if all(num == 0 for num in other.a_coeff): # TODO: maybe change for only a ERROR print and return [0,0...0] poly
+        if all(num == 0 for num in other.a_coeff):  # TODO: maybe change for only a ERROR print and return [0,0...0] poly
             raise Exception("Dividing by zero is not allowed")
 
-        # # ================
-        # # option 1 (Amit): # TODO: still doesn't work correctly
-        # # -------------
-        # # for (a/b):
-        # # We are using galois poly % operation to get the modulo of the division
-        # # After the % operation, we should varify the result poly' is indeed in the field.
-        # #
-        # # for 2 given poly in the field, the division can't be greate degree of f(x),
-        # # so we dont need to use:   () % self.l.fx_poly
-        # # -------------
-        #
-        # # return_poly = (self.a_poly % other.a_poly)  # TODO: not sure if % or //
-        # return_poly = (self.a_poly // other.a_poly)   # TODO: not sure if % or //
-        # return_FiniteFieldElement = self.galois_poly_to_element(return_poly)
-        # return return_FiniteFieldElement
-        #
-        # # option 1 (original by Sagi): Amit: why using self.a_mat? and not self.a_poly?
-        # return (self.a_mat // other.a_poly) % self.l.fx_poly
-        # # ================
-
-        #option 2:
         c_mat = self.a_mat @ np.linalg.inv(other.a_mat)
         return_FiniteFieldElement = FiniteFieldElement(l=self.l, a=c_mat[0, :])
         return return_FiniteFieldElement
 
+    def __pow__(self, power, modulo=None):
+        """
+        using galois and numpy operators
+        :param power:   int number
+        :param modulo:
+        :return: self to the power of 'power'
+        """
+        power_mat = np.linalg.matrix_power(self.a_mat, power)
+        return_FiniteFieldElement = FiniteFieldElement(l=self.l, a=power_mat[0, :])
+        return return_FiniteFieldElement
+
+    def order(self):
+        if all(num == 0 for num in self.a_coeff):  # TODO: maybe change for only a ERROR print and return [0,0...0] poly
+            raise Exception("ERROR: order of zero is not defined")
+
+        mul_mat = self.a_mat
+        order = 1
+        while np.any(mul_mat != self.identity):
+            mul_mat = mul_mat @ self.a_mat  # @ for matrix multiplication!
+            order += 1
+        return order
 
 
 if __name__ == '__main__':

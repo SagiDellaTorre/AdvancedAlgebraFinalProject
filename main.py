@@ -146,16 +146,15 @@ def run_section_5():
     print(f"a / a as matrix: \n{aa_div.get_matrix()}\n")
 
     ab_div = a / b
-    print(f"a / b =\n{ab_div}")  #  # TODO verify and raise exception if divide by 0
+    print(f"a / b =\n{ab_div}")  #
     print(f"a / b as matrix: \n{ab_div.get_matrix()}\n")
 
-
-    # # Test Exception
-    # print("Test Exception - divide by zero")
-    # c = FiniteFieldElement(l, [0, 0, 0])  # an object of finite field element
-    # print(f"c as poly': \n{c}")  # FiniteFieldElement as a polynomial
-    # ac_div = a / c
-    # print(f"a / c =\n{ac_div}")
+    # Test Exception
+    print("Test Exception - divide by zero")
+    c = FiniteFieldElement(l, [0, 0, 0])  # an object of finite field element
+    print(f"c as poly': \n{c}")  # FiniteFieldElement as a polynomial
+    ac_div = a / c
+    print(f"a / c =\n{ac_div}")
 
 
 def run_section_6():
@@ -164,7 +163,63 @@ def run_section_6():
     The output should be the poly^n
     :return:
     """
-    pass
+    # Define a Finite Field
+    p = 47  # prime number to set the field
+    fx_coeff = [42, 3, 0, 1]  # a irreducible poly' coeff': for a_n*x^n+...+a_1*x+a_0 -> [a_0, a_1, ...]
+    l = FiniteField(p, fx_coeff)  # the finite field object
+
+    # Define 2 poly in the field:
+    # # Test case 1:
+    a = FiniteFieldElement(l, [1, 2, 3])  # an object of finite field element
+    I = a/a  #
+
+    b = a ** 0
+    c = a ** 1
+    d = a ** 2
+    e = a ** 3
+    f = a ** -1
+    g = a ** -2
+    h = a ** -4
+
+    # --- Pretty-print of the Field and some element in the field ---
+    print(f"l = \n{l}")  # the FiniteField
+    print(f"a as poly':    \n{a}")  # FiniteFieldElement as a polynomial
+    print(f"a as matrix:   \n{a.get_matrix()}")  # FiniteFieldElement as a matrix
+    print(f"a as a vector: \n{a.get_vector()}\n")  # FiniteFieldElement as a vector
+
+    print(f"b as poly':    \n{b}")  # FiniteFieldElement as a polynomial
+    print(f"b as matrix:   \n{b.get_matrix()}")  # FiniteFieldElement as a matrix
+    print(f"b as a vector: \n{b.get_vector()}\n")  # FiniteFieldElement as a vector
+
+    print(f"c as poly':    \n{c}")  # FiniteFieldElement as a polynomial
+    print(f"c as matrix:   \n{c.get_matrix()}")  # FiniteFieldElement as a matrix
+    print(f"c as a vector: \n{c.get_vector()}\n")  # FiniteFieldElement as a vector
+
+    print(f"d as poly':    \n{d}")  # FiniteFieldElement as a polynomial
+    print(f"d as matrix:   \n{d.get_matrix()}")  # FiniteFieldElement as a matrix
+    print(f"d as a vector: \n{d.get_vector()}\n")  # FiniteFieldElement as a vector
+
+    print(f"e as poly':    \n{e}")  # FiniteFieldElement as a polynomial
+    print(f"e as matrix:   \n{e.get_matrix()}")  # FiniteFieldElement as a matrix
+    print(f"e as a vector: \n{e.get_vector()}\n")  # FiniteFieldElement as a vector
+
+    print(f"f as poly':    \n{f}")  # FiniteFieldElement as a polynomial
+    print(f"f as matrix:   \n{f.get_matrix()}")  # FiniteFieldElement as a matrix
+    print(f"f as a vector: \n{f.get_vector()}\n")  # FiniteFieldElement as a vector
+
+    print(f"g as poly':    \n{g}")  # FiniteFieldElement as a polynomial
+    print(f"g as matrix:   \n{g.get_matrix()}")  # FiniteFieldElement as a matrix
+    print(f"g as a vector: \n{g.get_vector()}\n")  # FiniteFieldElement as a vector
+
+    print(f"h as poly':    \n{h}")  # FiniteFieldElement as a polynomial
+    print(f"h as matrix:   \n{h.get_matrix()}")  # FiniteFieldElement as a matrix
+    print(f"h as a vector: \n{h.get_vector()}\n")  # FiniteFieldElement as a vector
+
+    a_inv = I / a  # We can see a**-1 = a_inv
+    print(f"a_inv as poly':    \n{a_inv}")  # FiniteFieldElement as a polynomial
+    print(f"a_inv as matrix:   \n{a_inv.get_matrix()}")  # FiniteFieldElement as a matrix
+    print(f"a_inv as a vector: \n{a_inv.get_vector()}\n")  # FiniteFieldElement as a vector
+
 
 def run_section_7():
     """
@@ -174,7 +229,32 @@ def run_section_7():
     Because l^x is cyclic - there should be always a solution for this problem
     :return: order(a)
     """
-    pass
+    # Define a Finite Field
+    p = 47  # prime number to set the field
+    fx_coeff = [42, 3, 0, 1]  # a irreducible poly' coeff': for a_n*x^n+...+a_1*x+a_0 -> [a_0, a_1, ...]
+    l = FiniteField(p, fx_coeff)  # the finite field object
+
+    # Define poly in the field:
+    a    = FiniteFieldElement(l, [1, 2, 3])  # an object of finite field element
+    I    = a/a
+    zero = a-a
+
+    # --- Pretty-print of the Field and some element in the field ---
+    print(f"l = \n{l}")  # the FiniteField
+
+    print(f"a as poly':    \n{a}")  # FiniteFieldElement as a polynomial
+    print(f"a as matrix:   \n{a.get_matrix()}")  # FiniteFieldElement as a matrix
+    print(f"a as a vector: \n{a.get_vector()}\n")  # FiniteFieldElement as a vector
+
+    order = a.order()
+    print(f"order a={order}")
+
+    order = I.order()
+    print(f"order I={order}")
+
+    # order = zero.order()
+    # print(f"order zero={order}")
+
 
 def run_section_8():
     """
@@ -201,11 +281,12 @@ def main():
     # run_section_2()
     # run_section_3()
     # run_section_4()
-    run_section_5()
+    # run_section_5()
     # run_section_6()
-    # run_section_7()
+    run_section_7()
     # run_section_8()
     # run_section_9()
+    pass
 
 
 if __name__ == '__main__':
@@ -223,6 +304,8 @@ if __name__ == '__main__':
     2. (Done)
         when operating with FiniteFieldElement, the return object is galois poly.
         than means, we can't use it anymore later as a FiniteFieldElement.
-        should we return a       
+        should we return a
+    3. XXX
+        in PrimeFieldElement - in all operators - return a PrimeFieldElement object instead of int's values        
     """
     main()

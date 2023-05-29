@@ -5,10 +5,10 @@ class PrimeFieldElement:
     # constructor
     def __init__(self, a, p):
 
-        self.GFP = galois.GF(p)
-        self.a = self.GFP(a)   # TODO: check a can be in the field
-        self.a_int = a
-        self.p_int = p
+        self.GFP      = galois.GF(p)
+        self.a        = self.GFP(a)   # TODO: check a can be in the field
+        self.a_int    = a
+        self.p_int    = p
 
     # for print function
     def __str__(self):

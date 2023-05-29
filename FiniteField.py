@@ -21,7 +21,6 @@ class FiniteField:
         self.varify_irreducible()
 
     def varify_irreducible(self):
-        # TODO: is it right?
         """
         we should check that the poly is indeed irreducible for degrees 2-3,
         we can do that by checking all the possible options.
