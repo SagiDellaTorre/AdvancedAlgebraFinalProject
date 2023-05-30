@@ -265,7 +265,17 @@ def run_section_8():
 
     :return:
     """
-    pass
+    # Define a Finite Field
+    p = 5  # prime number to set the field
+    fx_coeff = [2, 4, 1]  # a irreducible poly' coeff': for a_n*x^n+...+a_1*x+a_0 -> [a_0, a_1, ...]
+    l = FiniteField(p, fx_coeff)  # the finite field object
+
+    # Define poly in the field:
+    a = FiniteFieldElement(l, [1, 3])  # an object of finite field element
+    b = a.generator()
+ 
+    print(f"a as poly':    \n{a}")  # FiniteFieldElement as a polynomial
+    print(f"generator of the finite field = \n{b}")
 
 def run_section_9():
     """
@@ -283,8 +293,8 @@ def main():
     # run_section_4()
     # run_section_5()
     # run_section_6()
-    run_section_7()
-    # run_section_8()
+    # run_section_7()
+    run_section_8()
     # run_section_9()
     pass
 
