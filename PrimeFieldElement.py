@@ -8,7 +8,7 @@ class PrimeFieldElement:
             raise Exception(f"a must be element in the prime field, where p={p}")
 
         self.GFP      = galois.GF(p)
-        self.a        = self.GFP(a)   # TODO: check a can be in the field
+        self.a        = self.GFP(a)
         self.a_int    = a
         self.p_int    = p
 

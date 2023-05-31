@@ -97,7 +97,7 @@ class FiniteFieldElement:
         :param other:  poly b
         :return: a/b as a FiniteFieldElement object
         """
-        if all(num == 0 for num in other.a_coeff):  # TODO: maybe change for only a ERROR print and return [0,0...0] poly
+        if all(num == 0 for num in other.a_coeff):
             raise Exception("Dividing by zero is not allowed")
 
         c_mat = self.a_mat @ np.linalg.inv(other.a_mat)
@@ -131,7 +131,7 @@ class FiniteFieldElement:
         :return: order (int from 1 to p^n-1)
         :return: ist of all the elements which generated from the current element
         """
-        if all(num == 0 for num in self.a_coeff):  # TODO: maybe change for only a ERROR print and return [0,0...0] poly
+        if all(num == 0 for num in self.a_coeff):
             raise Exception("ERROR: order of zero is not defined")
 
         mul_mat = self.a_mat
