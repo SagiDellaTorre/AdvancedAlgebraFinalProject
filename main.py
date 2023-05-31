@@ -4,6 +4,26 @@ from FiniteFieldElement import FiniteFieldElement
 import galois
 import numpy as np
 
+def BSCS(l, g, y):
+
+    q = l.p ** l.n_poly_fx - 1 # order of the finite field
+    t = int(np.floor(np.sqrt(q)))
+    big_step_list = []
+
+    for i in range(int(np.floor(q/t))+1):
+        gi = g**(i*t)
+        big_step_list.append(gi)
+
+    for i in range(t+1):
+
+        yi = y*g**(i)
+        k = big_step_list.index(yi) if yi in big_step_list else -1
+
+        if k >= 0:
+            break
+
+    x = (k*t - i) % q
+    return x
 
 def run_section_2():
     print(f"=============================")
@@ -12,7 +32,7 @@ def run_section_2():
 
     a = PrimeFieldElement(3, 7)
     b = PrimeFieldElement(5, 7)
-    # c = PrimeFieldElement(-1, 7)  # TODO: check it can't be in field
+    # c = PrimeFieldElement(-1, 7) # Error
 
     print(f"a + b = {a + b}")  # 1
     print(f"a - b = {a - b}")  # 5
@@ -22,11 +42,11 @@ def run_section_2():
     print(f"inverse of a: {a.inverse()}")  # 5
     print(f"inverse of b: {b.inverse()}")  # 3
 
-    # c = a.inverse()
-    # print(f"a * a.inverse: {a*c}")  # 1  # TODO: ERROR: doesn't work because c is int and not a PrimeFieldElement object
+    c = a.inverse()
+    print(f"a * a.inverse: {a*c}")  # 1
 
     # matrix operation
-    print(f"==== matrix operation =====")
+    print(f"\n==== matrix operation =====")
     GF7 = galois.GF(7)
     a = GF7([[1, 2], [3, 4]])
     b = GF7([[3, 4], [5, 6]])
@@ -163,6 +183,10 @@ def run_section_6():
     The output should be the poly^n
     :return:
     """
+    print(f"=============================")
+    print(f"section (6) - exponentiation")
+    print(f"=============================")
+
     # Define a Finite Field
     p = 47  # prime number to set the field
     fx_coeff = [42, 3, 0, 1]  # a irreducible poly' coeff': for a_n*x^n+...+a_1*x+a_0 -> [a_0, a_1, ...]
@@ -229,6 +253,10 @@ def run_section_7():
     Because l^x is cyclic - there should be always a solution for this problem
     :return: order(a)
     """
+    print(f"=============================")
+    print(f"section (2) - find order")
+    print(f"=============================")
+
     # Define a Finite Field
     p = 47  # prime number to set the field
     fx_coeff = [42, 3, 0, 1]  # a irreducible poly' coeff': for a_n*x^n+...+a_1*x+a_0 -> [a_0, a_1, ...]
@@ -265,25 +293,46 @@ def run_section_8():
 
     :return:
     """
+    print(f"=============================")
+    print(f"section (8) - find generator")
+    print(f"=============================")
+
+    # Example 1
+    print("\nExample 1")
+    # Define a Finite Field
+    p = 5  # prime number to set the field
+    fx_coeff = [0, 1]  # a irreducible poly' coeff': for a_n*x^n+...+a_1*x+a_0 -> [a_0, a_1, ...]
+    l = FiniteField(p, fx_coeff)  # the finite field object
+
+    # Define poly in the field:
+    g = l.generator()
+ 
+    print(f"generator of the finite field {l} = \n{g}") # The generator is x
+
+    # Example 2
+    print("\nExample 2")
     # Define a Finite Field
     p = 5  # prime number to set the field
     fx_coeff = [2, 4, 1]  # a irreducible poly' coeff': for a_n*x^n+...+a_1*x+a_0 -> [a_0, a_1, ...]
     l = FiniteField(p, fx_coeff)  # the finite field object
 
     # Define poly in the field:
-    b = l.generator()
+    g = l.generator()
  
-    print(f"generator of the finite field {l} = \n{b}") # The generator is x
+    print(f"generator of the finite field {l} = \n{g}") # The generator is x
 
+    # Example 3
+    print("\nExample 3")
     # Define a Finite Field
     p = 47  # prime number to set the field
     fx_coeff = [42, 3, 0, 1]  # a irreducible poly' coeff': for a_n*x^n+...+a_1*x+a_0 -> [a_0, a_1, ...]
     l = FiniteField(p, fx_coeff)  # the finite field object
 
     # Define poly in the field:
-    b = l.generator()
+    g = l.generator()
  
-    print(f"generator of the finite field  {l} = \n{b}") # The generator is 5x^2
+    print(f"generator of the finite field  {l} = \n{g}") # The generator is 5x^2
+
 
 def run_section_9():
     """
@@ -292,8 +341,76 @@ def run_section_9():
 
     :return: 
     """
+
+    print(f"=============================")
+    print(f"section (9) - BSCS")
+    print(f"=============================")
+
+    # Example 1
+    print("\nExample 1")
+    # Define a Finite Field
+    p = 29  # prime number to set the field
+    fx_coeff = [0, 1]  # a irreducible poly' coeff': for a_n*x^n+...+a_1*x+a_0 -> [a_0, a_1, ...]
+    l = FiniteField(p, fx_coeff)  # the finite field object
+
+    # Define poly in the field:
+    g = l.generator()
+    x = 21
+    y = g**x # an object of finite field element
+    print(f"generator of the finite field {l} = {g}") # The generator is x
+    print(f"x = {x}")  # FiniteFieldElement as a polynomial
+    print(f"y = g^x as poly': {y}")  # FiniteFieldElement as a polynomial
+    print(f"we should find x")
+
+    # find x where y = g^x (in our case x = 8)
+    x_bscs = BSCS(l, g, y)
+ 
+    print(f"x from BSCS = {x_bscs}")
+    print(f"indeed: {y} = ({g})^{x} = {g**x_bscs}")
     
-    pass
+    # Example 2
+    print("\nExample 2")
+    # Define a Finite Field
+    p = 3  # prime number to set the field
+    fx_coeff = [1, 2, 0, 1]  # a irreducible poly' coeff': for a_n*x^n+...+a_1*x+a_0 -> [a_0, a_1, ...]
+    l = FiniteField(p, fx_coeff)  # the finite field object
+
+    # Define poly in the field:
+    g = l.generator()
+    x = 6
+    y = g**x # an object of finite field element
+    print(f"generator of the finite field {l} = {g}") # The generator is x
+    print(f"x = {x}")  # FiniteFieldElement as a polynomial
+    print(f"y = g^x as poly': {y}")  # FiniteFieldElement as a polynomial
+    print(f"we should find x")
+
+    # find x where y = g^x (in our case x = 8)
+    x_bscs = BSCS(l, g, y)
+ 
+    print(f"x from BSCS = {x_bscs}")
+    print(f"indeed: {y} = ({g})^{x} = {g**x_bscs}")
+    
+    # Example 3
+    print("\nExample 3")
+    # Define a Finite Field
+    p = 47  # prime number to set the field
+    fx_coeff = [42, 3, 0, 1]  # a irreducible poly' coeff': for a_n*x^n+...+a_1*x+a_0 -> [a_0, a_1, ...]
+    l = FiniteField(p, fx_coeff)  # the finite field object
+
+    # Define poly in the field:
+    g = l.generator()
+    x = 163
+    y = g**x # an object of finite field element
+    print(f"generator of the finite field {l} = {g}") # The generator is x
+    print(f"x = {x}")  # FiniteFieldElement as a polynomial
+    print(f"y = g^x as poly': {y}")  # FiniteFieldElement as a polynomial
+    print(f"we should find x")
+
+    # find x where y = g^x (in our case x = 8)
+    x_bscs = BSCS(l, g, y)
+ 
+    print(f"x from BSCS = {x_bscs}")
+    print(f"indeed: {y} = ({g})^{x} = {g**x_bscs}")
 
 def main():
     # run_section_2()
@@ -308,22 +425,5 @@ def main():
 
 
 if __name__ == '__main__':
-    # TODO:
-    """
-    General TODO:
-    1. (Done) 
-        in section 3: we should check that the poly is indeed irreducible for degrees 2-3, 
-        we can do that by checking all the possible options. 
-        for example,for F_7, and poly x^2+2x+1. we should do:
-            for i in range(0,7):
-                i^2+2i+1 = 0 ?
-            if all are not.. it is irreducible
-    
-    2. (Done)
-        when operating with FiniteFieldElement, the return object is galois poly.
-        than means, we can't use it anymore later as a FiniteFieldElement.
-        should we return a
-    3. XXX
-        in PrimeFieldElement - in all operators - return a PrimeFieldElement object instead of int's values        
-    """
+
     main()
