@@ -1,8 +1,9 @@
+import galois
+import numpy as np
+
 from PrimeFieldElement import PrimeFieldElement
 from FiniteField import FiniteField
 from FiniteFieldElement import FiniteFieldElement
-import galois
-import numpy as np
 
 def BSCS(l, g, y):
     """
@@ -435,5 +436,12 @@ def main():
 
 
 if __name__ == '__main__':
-
+    """
+    Code written by 
+    Sagi Della Torre ID: 205780836
+    Amit Eliav, ID: 204053466
+    
+    To run the code you should have the imported packages
+    and uncomment the run_section_i for each of the sections
+    """
     main()
