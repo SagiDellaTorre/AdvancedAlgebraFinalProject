@@ -5,25 +5,38 @@ import galois
 import numpy as np
 
 def BSCS(l, g, y):
+    """
+    This method get a finite field, generator and a object y=g^x
+    We want to solve the Discrete logarithm problem - to find x.
 
-    q = l.p ** l.n_poly_fx - 1 # order of the finite field
+    :param l: Finite Field
+    :param g: a generator in the finite field
+    :param y: y = g^x
+    :return:  x
+    """
+    q = l.p ** l.n_poly_fx - 1      # order of the finite field
     t = int(np.floor(np.sqrt(q)))
     big_step_list = []
 
+    # Save all g^i for i=0,t,2t,3t,...
     for i in range(int(np.floor(q/t))+1):
         gi = g**(i*t)
         big_step_list.append(gi)
 
+
     for i in range(t+1):
+        # Calc yi = y*g^i
+        yi = y * (g**i)
 
-        yi = y*g**(i)
+        # find the index 'k' of the element in {g^i} so that yi=g^kt
         k = big_step_list.index(yi) if yi in big_step_list else -1
-
-        if k >= 0:
+        if k >= 0:  # found!
             break
 
+    # yg^i=g^(kt)  ->  y=g^(kt-i)  ->  y^x=g^(kt-i)  -> x=(kt-i) mod q
     x = (k*t - i) % q
     return x
+
 
 def run_section_2():
     print(f"=============================")
@@ -45,7 +58,7 @@ def run_section_2():
     c = a.inverse()
     print(f"a * a.inverse: {a*c}")  # 1
 
-    # matrix operation
+    # matrix operation, using galois operations
     print(f"\n==== matrix operation =====")
     GF7 = galois.GF(7)
     a = GF7([[1, 2], [3, 4]])
@@ -58,8 +71,8 @@ def run_section_2():
     print(f"a * b =\n{a * b}")  # [[3 1] [1 3]]   # * - element wise multipication
     print(f"a / b =\n{a / b}")  # [[5 4] [2 3]]   # / - element wise multipication
     print(f"a @ b =\n{a @ b}")  # [[6 2] [1 1]]   # @ - matrix multipication
-    print(f"invers of a:\n{np.linalg.inv(a)}")  # [[5 1] [5 3]]
-    print(f"invers of b:\n{np.linalg.inv(b)}")  # [[4 2] [6 2]]  # matrix inversion
+    print(f"inverse of a:\n{np.linalg.inv(a)}")  # [[5 1] [5 3]]
+    print(f"inverse of b:\n{np.linalg.inv(b)}")  # [[4 2] [6 2]]  # matrix inversion
     print(f"a @ inv(a) =\n{a @ np.linalg.inv(a)}")  # [[1 0] [0 1]] Identity matrix
 
 
@@ -169,12 +182,12 @@ def run_section_5():
     print(f"a / b =\n{ab_div}")  #
     print(f"a / b as matrix: \n{ab_div.get_matrix()}\n")
 
-    # Test Exception
-    print("Test Exception - divide by zero")
-    c = FiniteFieldElement(l, [0, 0, 0])  # an object of finite field element
-    print(f"c as poly': \n{c}")  # FiniteFieldElement as a polynomial
-    ac_div = a / c
-    print(f"a / c =\n{ac_div}")
+    # # Test Exception
+    # print("Test Exception - divide by zero")
+    # c = FiniteFieldElement(l, [0, 0, 0])  # an object of finite field element
+    # print(f"c as poly': \n{c}")  # FiniteFieldElement as a polynomial
+    # ac_div = a / c
+    # print(f"a / c =\n{ac_div}")
 
 
 def run_section_6():
@@ -188,14 +201,14 @@ def run_section_6():
     print(f"=============================")
 
     # Define a Finite Field
-    p = 47  # prime number to set the field
-    fx_coeff = [42, 3, 0, 1]  # a irreducible poly' coeff': for a_n*x^n+...+a_1*x+a_0 -> [a_0, a_1, ...]
+    p        = 47                 # prime number to set the field
+    fx_coeff = [42, 3, 0, 1]      # a irreducible poly' coeff': for a_n*x^n+...+a_1*x+a_0 -> [a_0, a_1, ...]
     l = FiniteField(p, fx_coeff)  # the finite field object
 
     # Define 2 poly in the field:
     # # Test case 1:
     a = FiniteFieldElement(l, [1, 2, 3])  # an object of finite field element
-    I = a/a  #
+    I = a/a       # identity element
 
     b = a ** 0
     c = a ** 1
@@ -254,18 +267,18 @@ def run_section_7():
     :return: order(a)
     """
     print(f"=============================")
-    print(f"section (2) - find order")
+    print(f"section (7) - find order")
     print(f"=============================")
 
     # Define a Finite Field
-    p = 47  # prime number to set the field
-    fx_coeff = [42, 3, 0, 1]  # a irreducible poly' coeff': for a_n*x^n+...+a_1*x+a_0 -> [a_0, a_1, ...]
+    p        = 47                 # prime number to set the field
+    fx_coeff = [42, 3, 0, 1]      # a irreducible poly' coeff': for a_n*x^n+...+a_1*x+a_0 -> [a_0, a_1, ...]
     l = FiniteField(p, fx_coeff)  # the finite field object
 
     # Define poly in the field:
     a    = FiniteFieldElement(l, [1, 2, 3])  # an object of finite field element
     I    = a/a
-    zero = a-a
+    zero = a-a  # To be used later (for test error)
 
     # --- Pretty-print of the Field and some element in the field ---
     print(f"l = \n{l}")  # the FiniteField
@@ -274,13 +287,13 @@ def run_section_7():
     print(f"a as matrix:   \n{a.get_matrix()}")  # FiniteFieldElement as a matrix
     print(f"a as a vector: \n{a.get_vector()}\n")  # FiniteFieldElement as a vector
 
-    order = a.order()
-    print(f"order a={order}")
+    order, gen_list = a.order()
+    print(f"order of a is: {order}")
 
-    order = I.order()
-    print(f"order I={order}")
+    order, gen_list = I.order()
+    print(f"order of I is: {order}")
 
-    # order = zero.order()
+    # order, gen_list = zero.order()
     # print(f"order zero={order}")
 
 
@@ -299,49 +312,46 @@ def run_section_8():
 
     # Example 1
     print("\nExample 1")
-    # Define a Finite Field
-    p = 5  # prime number to set the field
-    fx_coeff = [0, 1]  # a irreducible poly' coeff': for a_n*x^n+...+a_1*x+a_0 -> [a_0, a_1, ...]
+    # Define a Finite Field - in this case it is like a !prime field!
+    p        = 5                  # prime number to set the field
+    fx_coeff = [0, 1]             # a irreducible poly' coeff': for a_n*x^n+...+a_1*x+a_0 -> [a_0, a_1, ...]
     l = FiniteField(p, fx_coeff)  # the finite field object
 
     # Define poly in the field:
     g = l.generator()
  
-    print(f"generator of the finite field {l} = \n{g}") # The generator is x
+    print(f"generator of the finite field {l} is:\n{g}")  # The generator is x
 
     # Example 2
     print("\nExample 2")
     # Define a Finite Field
-    p = 5  # prime number to set the field
-    fx_coeff = [2, 4, 1]  # a irreducible poly' coeff': for a_n*x^n+...+a_1*x+a_0 -> [a_0, a_1, ...]
+    p        = 5                  # prime number to set the field
+    fx_coeff = [2, 4, 1]          # a irreducible poly' coeff': for a_n*x^n+...+a_1*x+a_0 -> [a_0, a_1, ...]
     l = FiniteField(p, fx_coeff)  # the finite field object
 
     # Define poly in the field:
     g = l.generator()
  
-    print(f"generator of the finite field {l} = \n{g}") # The generator is x
+    print(f"generator of the finite field {l} is:\n{g}")  # The generator is x
 
     # Example 3
     print("\nExample 3")
     # Define a Finite Field
-    p = 47  # prime number to set the field
-    fx_coeff = [42, 3, 0, 1]  # a irreducible poly' coeff': for a_n*x^n+...+a_1*x+a_0 -> [a_0, a_1, ...]
+    p        = 47                 # prime number to set the field
+    fx_coeff = [42, 3, 0, 1]      # a irreducible poly' coeff': for a_n*x^n+...+a_1*x+a_0 -> [a_0, a_1, ...]
     l = FiniteField(p, fx_coeff)  # the finite field object
 
     # Define poly in the field:
     g = l.generator()
  
-    print(f"generator of the finite field  {l} = \n{g}") # The generator is 5x^2
+    print(f"generator of the finite field {l} is:\n{g}")  # The generator is 5x^2
 
 
 def run_section_9():
     """
     Using the BSGS algorithm, write a function to solve the discrete logarithm problem.
-    That is, given g^t in l^x, find the natural number 1<=t<=p^n
-
-    :return: 
+    That is, given g^t in l^x, find the natural number 1<= t <p^n
     """
-
     print(f"=============================")
     print(f"section (9) - BSCS")
     print(f"=============================")
@@ -349,17 +359,17 @@ def run_section_9():
     # Example 1
     print("\nExample 1")
     # Define a Finite Field
-    p = 29  # prime number to set the field
-    fx_coeff = [0, 1]  # a irreducible poly' coeff': for a_n*x^n+...+a_1*x+a_0 -> [a_0, a_1, ...]
+    p        = 29                 # prime number to set the field
+    fx_coeff = [0, 1]             # a irreducible poly' coeff': for a_n*x^n+...+a_1*x+a_0 -> [a_0, a_1, ...]
     l = FiniteField(p, fx_coeff)  # the finite field object
 
     # Define poly in the field:
     g = l.generator()
     x = 21
     y = g**x # an object of finite field element
-    print(f"generator of the finite field {l} = {g}") # The generator is x
-    print(f"x = {x}")  # FiniteFieldElement as a polynomial
-    print(f"y = g^x as poly': {y}")  # FiniteFieldElement as a polynomial
+    print(f"generator of the finite field {l} is: {g}") # The generator is g
+    print(f"x = {x}")
+    print(f"y = g^x as poly': {y}")
     print(f"we should find x")
 
     # find x where y = g^x (in our case x = 8)
@@ -371,7 +381,7 @@ def run_section_9():
     # Example 2
     print("\nExample 2")
     # Define a Finite Field
-    p = 3  # prime number to set the field
+    p        = 3             # prime number to set the field
     fx_coeff = [1, 2, 0, 1]  # a irreducible poly' coeff': for a_n*x^n+...+a_1*x+a_0 -> [a_0, a_1, ...]
     l = FiniteField(p, fx_coeff)  # the finite field object
 
@@ -379,9 +389,9 @@ def run_section_9():
     g = l.generator()
     x = 6
     y = g**x # an object of finite field element
-    print(f"generator of the finite field {l} = {g}") # The generator is x
-    print(f"x = {x}")  # FiniteFieldElement as a polynomial
-    print(f"y = g^x as poly': {y}")  # FiniteFieldElement as a polynomial
+    print(f"generator of the finite field {l} is: {g}") # The generator is g
+    print(f"x = {x}")
+    print(f"y = g^x as poly': {y}")
     print(f"we should find x")
 
     # find x where y = g^x (in our case x = 8)
@@ -393,34 +403,34 @@ def run_section_9():
     # Example 3
     print("\nExample 3")
     # Define a Finite Field
-    p = 47  # prime number to set the field
-    fx_coeff = [42, 3, 0, 1]  # a irreducible poly' coeff': for a_n*x^n+...+a_1*x+a_0 -> [a_0, a_1, ...]
+    p = 47                        # prime number to set the field
+    fx_coeff = [42, 3, 0, 1]      # a irreducible poly' coeff': for a_n*x^n+...+a_1*x+a_0 -> [a_0, a_1, ...]
     l = FiniteField(p, fx_coeff)  # the finite field object
 
     # Define poly in the field:
     g = l.generator()
     x = 163
     y = g**x # an object of finite field element
-    print(f"generator of the finite field {l} = {g}") # The generator is x
-    print(f"x = {x}")  # FiniteFieldElement as a polynomial
-    print(f"y = g^x as poly': {y}")  # FiniteFieldElement as a polynomial
+    print(f"generator of the finite field {l} is: {g}") # The generator is g
+    print(f"x = {x}")
+    print(f"y = g^x as poly': {y}")
     print(f"we should find x")
 
     # find x where y = g^x (in our case x = 8)
     x_bscs = BSCS(l, g, y)
  
-    print(f"x from BSCS = {x_bscs}")
+    print(f"x from BSCS is: {x_bscs}")
     print(f"indeed: {y} = ({g})^{x} = {g**x_bscs}")
 
 def main():
-    # run_section_2()
-    # run_section_3()
-    # run_section_4()
-    # run_section_5()
-    # run_section_6()
-    # run_section_7()
+    run_section_2()
+    run_section_3()
+    run_section_4()
+    run_section_5()
+    run_section_6()
+    run_section_7()
     run_section_8()
-    # run_section_9()
+    run_section_9()
     pass
 
 

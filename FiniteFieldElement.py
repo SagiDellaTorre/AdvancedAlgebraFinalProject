@@ -3,7 +3,6 @@ import numpy as np
 import itertools
 
 class FiniteFieldElement:
-
     # constructor
     def __init__(self, l, a):
         """
