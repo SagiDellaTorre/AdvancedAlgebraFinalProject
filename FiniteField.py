@@ -1,5 +1,7 @@
 import galois
 import numpy as np
+import itertools
+from FiniteFieldElement import FiniteFieldElement
 
 class FiniteField:
 
@@ -86,6 +88,28 @@ class FiniteField:
         """
         return self.GFP(np.pad(a, (self.n_poly_fx-len(a), 0)))
 
+    def generator(self):
+
+        coeff_list = range(self.p)
+        element_iter = itertools.product(coeff_list, repeat=self.n_poly_fx) # all the combination with replacment and order matters
+        elements_generated_list = []
+
+        for element in element_iter: # loop over all the elements in the finite field and check which one of them is the generator
+
+            if all(num == 0 for num in element): # jump over zero element
+                continue
+            
+            FiniteFieldEle = FiniteFieldElement(l=self, a=element)
+            if FiniteFieldEle in elements_generated_list: # jump over elements from the empty list (elements we already generated)
+                continue
+
+            order, curr_elements_genereted_list = FiniteFieldEle.order() # get the order of the current element
+            elements_generated_list = elements_generated_list + curr_elements_genereted_list # add to the list all the elements which generate from the current element
+            if order == self.p ** self.n_poly_fx - 1: # only generator has this order - generate all the elements in the field except for zero
+                generator = FiniteFieldEle
+                break
+
+        return generator
 
 
 if __name__ == '__main__':

@@ -271,11 +271,19 @@ def run_section_8():
     l = FiniteField(p, fx_coeff)  # the finite field object
 
     # Define poly in the field:
-    a = FiniteFieldElement(l, [1, 3])  # an object of finite field element
-    b = a.generator()
+    b = l.generator()
  
-    print(f"a as poly':    \n{a}")  # FiniteFieldElement as a polynomial
-    print(f"generator of the finite field = \n{b}")
+    print(f"generator of the finite field {l} = \n{b}") # The generator is x
+
+    # Define a Finite Field
+    p = 47  # prime number to set the field
+    fx_coeff = [42, 3, 0, 1]  # a irreducible poly' coeff': for a_n*x^n+...+a_1*x+a_0 -> [a_0, a_1, ...]
+    l = FiniteField(p, fx_coeff)  # the finite field object
+
+    # Define poly in the field:
+    b = l.generator()
+ 
+    print(f"generator of the finite field  {l} = \n{b}") # The generator is 5x^2
 
 def run_section_9():
     """

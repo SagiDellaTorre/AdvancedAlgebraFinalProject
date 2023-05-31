@@ -144,28 +144,5 @@ class FiniteFieldElement:
             gen_list.append(FiniteFieldElement(l=self.l, a=mul_mat[0, :])) # add all the element which generate from our element to a list
         return order, gen_list
     
-    def generator(self):
-
-        coeff_list = range(self.l.p)
-        element_iter = itertools.product(coeff_list, repeat=self.n_coeff) # all the combination with replacment and order matters
-        empty_list = []
-
-        for element in element_iter: # loop over all the elements in the finite field and check which one of them is the generator
-
-            if all(num == 0 for num in element): # jump over zero element
-                continue
-            
-            FiniteFieldEle = FiniteFieldElement(l=self.l, a=element)
-            if FiniteFieldEle in empty_list: # jump over elements from the empty list (elements we already generated)
-                continue
-
-            order, tmp_list = FiniteFieldEle.order() # get the order of the current element
-            empty_list = empty_list + tmp_list # add to the list all the elements which generate from the current element
-            if order == self.l.p ** self.n_coeff - 1: # only generator has this order - generate all the elements in the field except for zero
-                generator = FiniteFieldEle
-                break
-
-        return generator
-
 if __name__ == '__main__':
     pass
