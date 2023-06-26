@@ -89,20 +89,30 @@ class FiniteField:
 
     def generator(self):
         coeff_list = range(self.p)
-        element_iter = itertools.product(coeff_list, repeat=self.n_poly_fx)  # all the combination with replacment and order matters
+
+        # get all the combination with replacement and order matters
+        element_iter = itertools.product(coeff_list, repeat=self.n_poly_fx)
         elements_generated_list = []
 
-        for element in element_iter:  # loop over all the elements in the finite field and check which one of them is the generator
+        # loop over all the elements in the finite field and check which one of them is the generator
+        for element in element_iter:
             if all(num == 0 for num in element): # jump over zero element
                 continue
             
             FiniteFieldEle = FiniteFieldElement(l=self, a=element)
-            if FiniteFieldEle in elements_generated_list:  # jump over elements from the empty list (elements we already generated)
+
+            # jump over elements from the list (elements we've already generated)
+            if FiniteFieldEle in elements_generated_list:
                 continue
 
-            order, curr_elements_genereted_list = FiniteFieldEle.order()  # get the order of the current element
-            elements_generated_list = elements_generated_list + curr_elements_genereted_list # add to the list all the elements which generate from the current element
-            if order == self.p ** self.n_poly_fx - 1: # only generator has this order - generate all the elements in the field except for zero
+            # get the order of the current element, and the elements which generate from it
+            order, curr_elements_genereted_list = FiniteFieldEle.order()
+
+            # add to the list all the elements which generate from the current element
+            elements_generated_list = elements_generated_list + curr_elements_genereted_list
+
+            # only generator has this order - generate all the elements in the field except for zero
+            if order == self.p ** self.n_poly_fx - 1:
                 generator = FiniteFieldEle
                 break
 
