@@ -32,6 +32,8 @@ class PrimeFieldElement:
     def inverse(self):
         # find a_inv and t such that: a * a_inv + p * t = 1
         gcd, a_inv_int, t = galois.egcd(self.a_int, self.p_int)
+        if gcd == 0 or gcd == self.p_int:
+            raise Exception(f"{self.a_int} do not have an inverse in the prime field {self.p_int}")
         return PrimeFieldElement(a_inv_int % self.p_int,self.p_int)
 
     # adding two objects  

@@ -34,7 +34,7 @@ def BSCS(l, g, y):
         if k >= 0:  # found!
             break
 
-    # yg^i=g^(kt)  ->  y=g^(kt-i)  ->  y^x=g^(kt-i)  -> x=(kt-i) mod q
+    # y*g^i=g^(kt)  ->  y=g^(kt-i)  ->  g^x=g^(kt-i)  -> x=(kt-i) mod q
     x = (k*t - i) % q
     return x
 
@@ -79,7 +79,7 @@ def run_section_2():
 
 def run_section_3():
     print(f"====================================")
-    print(f"section (3) - matrix representation")
+    print(f"section (3) - Finite Field")
     print(f"====================================")
     # Define a Finite Field:
     p        = 7                  # prime number to set the field
@@ -96,7 +96,7 @@ def run_section_3():
 
 def run_section_4():
     print(f"====================================")
-    print(f"section (4) - matrix representation")
+    print(f"section (4) - finite field element and matrix representation")
     print(f"====================================")
 
     # Define a Finite Field:
