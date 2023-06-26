@@ -388,7 +388,7 @@ def run_section_9():
 
     # Define poly in the field:
     g = l.generator()
-    x = 6
+    x = 6  # 6 , -1
     y = g**x # an object of finite field element
     print(f"generator of the finite field {l} is: {g}") # The generator is g
     print(f"x = {x}")
@@ -424,13 +424,13 @@ def run_section_9():
     print(f"indeed: {y} = ({g})^{x} = {g**x_bscs}")
 
 def main():
-    run_section_2()
-    run_section_3()
-    run_section_4()
-    run_section_5()
-    run_section_6()
-    run_section_7()
-    run_section_8()
+    # run_section_2()
+    # run_section_3()
+    # run_section_4()
+    # run_section_5()
+    # run_section_6()
+    # run_section_7()
+    # run_section_8()
     run_section_9()
     pass
 
