@@ -42,7 +42,7 @@ class FiniteField:
     def set_basis(self):
         """
         This method create a basis matrices list.
-        For example: for GL3[k] the besis will be of len 3, with 3 matrices of shape 3x3.
+        For example: for GL3[k] the basis will be of len 3, with 3 matrices of shape 3x3.
         :return: the basis
         """
         basis = []
